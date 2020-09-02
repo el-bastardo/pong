@@ -19,9 +19,6 @@
         canvas.width = 500;
         canvas.height = 500;
         
-        // score output
-        var titel = document.getElementById("score");
-        titel.innerHTML = "Player 1: ";
 
         // define playerOne
         var playerOne = {
@@ -41,6 +38,13 @@
             score: 0,
         }
 
+        updateScorePlayerOne();
+
+        function updateScorePlayerOne() {
+            var titel = document.getElementById("score");
+            titel.innerHTML = "Player 1: " + playerOne.score;
+        }
+
         var ball = {
             x: canvas.width / 2,
             y: canvas.height / 2,
@@ -52,18 +56,6 @@
         function renderCanvas() {
             ctx.fillStyle = "#000000";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
-
-        function drawScore1() {
-            ctx.font = "16px Arial";
-            ctx.fillStyle = "#FFFFFF";
-            ctx.fillText("Player 1: " + playerOne.score, 8, 30);
-        }
-
-        function drawScore2() {
-            ctx.font = "16px Arial";
-            ctx.fillStyle = "#FFFFFF";
-            ctx.fillText("Player 2: " + playerTwo.score, 8, 480);
         }
 
         function renderPlayerOne() {
@@ -154,10 +146,9 @@
 
         function game() {
             renderCanvas();
-            drawScore1();
-            drawScore2();
             renderPlayerOne();
             renderPlayerTwo();
+            updateScorePlayerOne();
             renderBall();
             movePlayer();
         }
