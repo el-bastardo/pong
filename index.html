@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pong</title>
+    <!-- <script src="script.js"></script> -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>Pong</h1>
+    <p id="score"></p>
+    <canvas id="myCanvas"></canvas>
+    <script>
+        // define canvas
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        canvas.width = 500;
+        canvas.height = 500;
+        
+        // score output
+        var titel = document.getElementById("score");
+        titel.innerHTML = "Player 1: ";
+
+        // define playerOne
+        var playerOne = {
+            x: 215, // (canvas.width - playerOne.width) / 2,
+            y: 20,
+            width: 70,
+            height: 20,
+            score: 0,
+        }
+
+        // define playerTwo
+        var playerTwo = {
+            x: 215,
+            y: 460,
+            width: 70,
+            height: 20,
+            score: 0,
+        }
+
+        var ball = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            ballRadius: 10,
+            dx: 1.5,
+            dy: -1.5,
+        }
+
+        function renderCanvas() {
+            ctx.fillStyle = "#000000";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function drawScore1() {
+            ctx.font = "16px Arial";
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillText("Player 1: " + playerOne.score, 8, 30);
+        }
+
+        function drawScore2() {
+            ctx.font = "16px Arial";
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillText("Player 2: " + playerTwo.score, 8, 480);
+        }
+
+        function renderPlayerOne() {
+            ctx.fillStyle = "#003366";
+            ctx.fillRect(playerOne.x, playerOne.y, playerOne.width, playerOne.height);
+            ctx.strokeRect(playerOne.x, playerOne.y, playerOne.width, playerOne.height);
+        }
+
+        function renderPlayerTwo() {
+            ctx.fillStyle = "#990033";
+            ctx.fillRect(playerTwo.x, playerTwo.y, playerTwo.width, playerTwo.height);
+            ctx.strokeRect(playerTwo.x, playerTwo.y, playerTwo.width, playerTwo.height);
+        }
+
+        //move playerOne using left and right arrow key and playerTwo using A and D
+        function movePlayer() {
+
+            window.onkeydown = function(event) {
+                var keyPr = event.keyCode; //Key code of key pressed
+
+                if (keyPr === 39 && playerOne.x < canvas.width - playerOne.width) {
+                    playerOne.x += 40; //right arrow add 20 from current
+                } else if (keyPr === 37 && playerOne.x > 10) {
+                    playerOne.x -= 40; //left arrow subtract 20 from current
+
+                    /* Top Arrow and Bootom Arrow
+                    } else if (keyPr === 38 && playerOne.y > 10) {
+                        playerOne.y -= 20; 
+                    } else if (keyPr === 40 && playerOne.y <= 460) {
+                        playerOne.y += 20; */
+
+                } else if (keyPr === 68 && playerTwo.x <= canvas.width - playerTwo.width) {
+                    playerTwo.x += 40; //D add 20 from current)
+                } else if (keyPr === 65 && playerTwo.x > 10) {
+                    playerTwo.x -= 40; //A subtract 20 from current
+
+                    /* W and S    
+                    } else if (keyPr === 87 && playerTwo.y > 20) {
+                        playerTwo.y -= 20;
+                    } else if (keyPr === 83 && playerTwo.y <= 440) {
+                        playerTwo.y += 20; */
+
+                }
+
+                /*clearing anything drawn on canvas
+                 *comment this below do draw path */
+                ctx.clearRect(0, 0, 500, 500);
+
+                //Drawing rectangle at new position
+                drawRect(playerOne.x, playerOne.y, playerOne.width, playerOne.height);
+                drawRect(playerTwo.x, playerTwo.y, playerTwo.width, playerTwo.height);
+
+            }
+        }
+
+        function renderBall() {
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.ballRadius, 0, 2 * Math.PI);
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fill();
+
+            if (ball.x + ball.dx > canvas.width - ball.ballRadius) {
+                ball.dx = -ball.dx;
+            }
+            if (ball.x + ball.dx < ball.ballRadius) {
+                ball.dx = -ball.dx;
+            }
+            if (ball.x - ball.ballRadius >= playerOne.x && ball.x - ball.ballRadius <= playerOne.x + playerOne.width && ball.y - ball.ballRadius >= playerOne.y && ball.y - ball.ballRadius <= playerOne.y + playerOne.height) {
+                //  ball.dx = -ball.dx;
+                ball.dy = -ball.dy;
+            }
+            if (ball.x + ball.ballRadius >= playerTwo.x && ball.x + ball.ballRadius <= playerTwo.x + playerTwo.width && ball.y + ball.ballRadius >= playerTwo.y && ball.y + ball.ballRadius <= playerTwo.y + playerTwo.height) {
+                //  ball.dx = -ball.dx;
+                ball.dy = -ball.dy;
+            }
+            if (ball.y + ball.dy > canvas.height - ball.ballRadius) {
+                restart();
+                playerOne.score++;
+            }
+            if (ball.y + ball.dy < ball.ballRadius) {
+                restart();
+                playerTwo.score++;
+            }
+
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+        }
+
+        function game() {
+            renderCanvas();
+            drawScore1();
+            drawScore2();
+            renderPlayerOne();
+            renderPlayerTwo();
+            renderBall();
+            movePlayer();
+        }
+
+        var interval = setInterval(game, 10);
+
+        function restart() {
+            ball.x = canvas.width / 2;
+            ball.y = canvas.height / 2;
+        }
+    </script>
+</body></html>
