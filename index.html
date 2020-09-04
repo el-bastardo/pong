@@ -4,14 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Pong</title>
-    <!-- <script src="script.js"></script> -->
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h1>Pong</h1>
-    <p id="score"></p>
+    <p id="scorePlayerOne"></p>
     <canvas id="myCanvas"></canvas>
+    <p id="scorePlayerTwo"></p>
     <script>
         // define canvas
         var canvas = document.getElementById("myCanvas");
@@ -27,6 +26,7 @@
             height: 20,
             score: 0,
             style: "#003366",
+            scoreAnzeige: "scorePlayerOne",
         }
 
         // define playerTwo
@@ -37,11 +37,16 @@
             height: 20,
             score: 0,
             style: "#990033",
+            scoreAnzeige: "scorePlayerTwo",
         }
-
-        function updateScorePlayerOne() {
-            var titel = document.getElementById("score");
-            titel.innerHTML = "Player 1: " + playerOne.score;
+        
+        // define Controller for playerOne
+        var controllerOne = {
+            
+        }
+        
+        var controllerTwo = {
+            
         }
 
         var ball = {
@@ -61,7 +66,12 @@
             ctx.fillStyle = playerData.style;
             ctx.fillRect(playerData.x, playerData.y, playerData.width, playerData.height);
             ctx.strokeRect(playerData.x, playerData.y, playerData.width, playerData.height);
-        }   
+        }
+        
+        function updateScore(scoreData, id) {
+            var anzeige = document.getElementById(scoreData.scoreAnzeige);
+            anzeige.innerHTML = "Score: " + scoreData.score;
+        }
 
         //move playerOne using left and right arrow key and playerTwo using A and D
         function movePlayer() {
@@ -73,34 +83,14 @@
                     playerOne.x += 40; //right arrow add 20 from current
                 } else if (keyPr === 37 && playerOne.x > 10) {
                     playerOne.x -= 40; //left arrow subtract 20 from current
-
-                    /* Top Arrow and Bootom Arrow
-                    } else if (keyPr === 38 && playerOne.y > 10) {
-                        playerOne.y -= 20; 
-                    } else if (keyPr === 40 && playerOne.y <= 460) {
-                        playerOne.y += 20; */
-
                 } else if (keyPr === 68 && playerTwo.x <= canvas.width - playerTwo.width) {
                     playerTwo.x += 40; //D add 20 from current)
                 } else if (keyPr === 65 && playerTwo.x > 10) {
                     playerTwo.x -= 40; //A subtract 20 from current
-
-                    /* W and S    
-                    } else if (keyPr === 87 && playerTwo.y > 20) {
-                        playerTwo.y -= 20;
-                    } else if (keyPr === 83 && playerTwo.y <= 440) {
-                        playerTwo.y += 20; */
-
                 }
 
-                /*clearing anything drawn on canvas
-                 *comment this below do draw path */
-                ctx.clearRect(0, 0, 500, 500);
-
-                //Drawing rectangle at new position
-                drawRect(playerOne.x, playerOne.y, playerOne.width, playerOne.height);
-                drawRect(playerTwo.x, playerTwo.y, playerTwo.width, playerTwo.height);
-
+                controllerOne[keyPr] = true;
+                console.log(controllerOne);
             }
         }
 
@@ -141,7 +131,8 @@
             renderCanvas();
             renderPlayer(playerOne);
             renderPlayer(playerTwo);
-            updateScorePlayerOne();
+            updateScore(playerOne, "scorePlayerOne");
+            updateScore(playerTwo, "scorePlayerTwo");
             renderBall();
             movePlayer();
         }

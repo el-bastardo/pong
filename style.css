@@ -1,23 +1,13 @@
 canvas {
-    padding-left: 0;
-    padding-right: 0;
-    margin-left: auto;
-    margin-right: auto;
+    padding: 0;
+    margin: auto;
+    display: block;
     display: block;
     width: 500px;
 }
 
-playerOne {
-    background-color: blue;
-    border: 1px solid #000000;
-}
-
-playerTwo {
-    background-color: red;
-    border: 1px solid #000000;
-}
-ball {
-    background-color: black;
+p {
+    text-align: center;
 }
 
 html,
