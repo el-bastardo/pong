@@ -54,7 +54,7 @@
             y: canvas.height / 2,
             ballRadius: 10,
             dx: 1.5,
-            dy: -1.5,
+            dy: 1.5,
         }
 
         function renderCanvas() {
@@ -109,18 +109,22 @@
             if (ball.x - ball.ballRadius >= playerOne.x && ball.x - ball.ballRadius <= playerOne.x + playerOne.width && ball.y - ball.ballRadius >= playerOne.y && ball.y - ball.ballRadius <= playerOne.y + playerOne.height) {
                 //  ball.dx = -ball.dx;
                 ball.dy = -ball.dy;
+                ball.dy += 0.5;
             }
             if (ball.x + ball.ballRadius >= playerTwo.x && ball.x + ball.ballRadius <= playerTwo.x + playerTwo.width && ball.y + ball.ballRadius >= playerTwo.y && ball.y + ball.ballRadius <= playerTwo.y + playerTwo.height) {
                 //  ball.dx = -ball.dx;
                 ball.dy = -ball.dy;
+                ball.dy -= 0.5;
             }
             if (ball.y + ball.dy > canvas.height - ball.ballRadius) {
                 restart();
                 playerOne.score++;
+                ball.dy = 1.5;
             }
             if (ball.y + ball.dy < ball.ballRadius) {
                 restart();
                 playerTwo.score++;
+                ball.dy = 1.5;
             }
 
             ball.x += ball.dx;
