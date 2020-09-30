@@ -8,7 +8,6 @@
 </head>
 
 <body>
-    <p id="scorePlayerOne"></p>
     <canvas id="myCanvas"></canvas>
     <p id="scorePlayerTwo"></p>
     <script>
@@ -19,8 +18,11 @@
         canvas.height = 500;
 
         const speed = 5;
+        var bricks = [];
+        const brickWidth = 70;
+        const brickHeight = 20;
 
-        class player {
+        class Player {
             constructor(x, y, width, heigth, score, style, scoreAnzeige) {
                 this.x = x;
                 this.y = y;
@@ -43,8 +45,32 @@
             }
         }
 
-        let playerOne = new player(215, 20, 70, 20, 0, "#003366", "scorePlayerOne");
-        let playerTwo = new player(215, 460, 70, 20, 0, "#990033", "scorePlayerTwo");
+        class Brick {
+            constructor(x, y, width, height, style, itemDrop = false, hp = 1) {
+                this.x = x;
+                this.y = y;
+                this.width = width;
+                this.height = height;
+                this.style = style;
+                this.itemDrop = itemDrop;
+                this.hp = hp;
+            }
+
+            renderBrick() {
+                ctx.fillStyle = this.style;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+                ctx.strokeRect(this.x, this.y, this.width, this.height);
+            }
+        }
+
+        for (let y = 0; y < 5; y++) {
+            for (let x = 0; x < 10; x++) {
+                let brickOne = new Brick(x * brickWidth, y * brickHeight, brickWidth, brickHeight, "#003366");
+                bricks.push(brickOne);
+            }
+        }
+
+        let playerTwo = new Player(215, 460, 70, 20, 0, "#990033", "scorePlayerTwo");
 
         class controller {
             constructor(moveLeft, moveRight, keyCodeLeft, keyCodeRight) {
@@ -71,9 +97,6 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
 
-        playerOne.renderPlayer();
-        playerTwo.renderPlayer();
-        
         document.addEventListener("keydown", keyDownHandler, false);
         document.addEventListener("keyup", keyUpHandler, false);
 
@@ -101,19 +124,14 @@
             }
         }
 
-        //move playerOne using left and right arrow key and playerTwo using A and D
         function movePlayer() {
 
-                if (controllerOne.moveRight && playerOne.x < canvas.width - playerOne.width) {
-                    playerOne.x += speed; //right arrow add 20 from current
-                } else if (controllerOne.moveLeft && playerOne.x > 10) {
-                    playerOne.x -= speed; //left arrow subtract 20 from current
-                } else if (controllerTwo.moveRight && playerTwo.x <= canvas.width - playerTwo.width) {
-                    playerTwo.x += speed; //D add 20 from current)
-                } else if (controllerTwo.moveLeft && playerTwo.x > 10) {
-                    playerTwo.x -= speed; //A subtract 20 from current
-                }
+            if (controllerTwo.moveRight && playerTwo.x <= canvas.width - playerTwo.width) {
+                playerTwo.x += speed;
+            } else if (controllerTwo.moveLeft && playerTwo.x > 10) {
+                playerTwo.x -= speed;
             }
+        }
 
         function renderBall() {
             ctx.beginPath();
@@ -121,43 +139,31 @@
             ctx.fillStyle = "#FFFFFF";
             ctx.fill();
 
+            var ballPosition = ball.y;
+
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+
             if (ball.x + ball.dx > canvas.width - ball.ballRadius) {
                 ball.dx = -ball.dx;
             }
             if (ball.x + ball.dx < ball.ballRadius) {
                 ball.dx = -ball.dx;
             }
-            if (ball.x - ball.ballRadius >= playerOne.x && ball.x - ball.ballRadius <= playerOne.x + playerOne.width && ball.y - ball.ballRadius >= playerOne.y && ball.y - ball.ballRadius <= playerOne.y + playerOne.height) {
-                //  ball.dx = -ball.dx;
-                ball.dy = -ball.dy;
-                ball.dy += 0.5;
-            }
             if (ball.x + ball.ballRadius >= playerTwo.x && ball.x + ball.ballRadius <= playerTwo.x + playerTwo.width && ball.y + ball.ballRadius >= playerTwo.y && ball.y + ball.ballRadius <= playerTwo.y + playerTwo.height) {
-                //  ball.dx = -ball.dx;
+                ball.y = ballPosition;
                 ball.dy = -ball.dy;
                 ball.dy -= 0.5;
             }
-            if (ball.y + ball.dy > canvas.height - ball.ballRadius) {
-                restart();
-                playerOne.score++;
-                ball.dy = 1.5;
-            }
-            if (ball.y + ball.dy < ball.ballRadius) {
-                restart();
-                playerTwo.score++;
-                ball.dy = 1.5;
-            }
-
-            ball.x += ball.dx;
-            ball.y += ball.dy;
         }
 
         function game() {
             renderCanvas();
-            playerOne.renderPlayer();
             playerTwo.renderPlayer();
-            playerOne.updateScore();
             playerTwo.updateScore();
+            for (let i = 0; i < bricks.length; i++) {
+                bricks[i].renderBrick();
+            }
             renderBall();
             movePlayer();
         }
@@ -168,8 +174,5 @@
             ball.x = canvas.width / 2;
             ball.y = canvas.height / 2;
         }
-
     </script>
-</body>
-
-</html>
+</body></html>
